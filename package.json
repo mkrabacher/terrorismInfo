@@ -1,0 +1,21 @@
+{
+  "name": "proj",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@types/googlemaps": "^3.30.8",
+    "brain.js": "^1.1.2",
+    "express": "^4.16.3",
+    "heatmap.js": "^2.0.5",
+    "leaflet": "^1.3.1",
+    "mongoose": "^5.0.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

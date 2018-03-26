@@ -1,0 +1,39 @@
+
+<div>
+    <h3>Filter by:</h3>
+    <select name="year" id="yearSelector" [(ngModel)]="filterYear">
+        <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+    </select>
+    <button (click)="filter()">Filter</button>
+</div>
+
+<div>
+    <h2>here's data</h2>
+    <table>
+        <thead>
+            <th>Region</th>
+            <th>Country</th>
+            <th>City</th>
+            <th>Year</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Summary</th>
+            <th>Attack Type</th>
+            <th>Target Type</th>
+        </thead>
+        <tbody>
+            <h3 *ngIf="loading">Loading...</h3>
+            <tr *ngFor="let attack of displayAttacks">
+                <td>{{attack.region_txt}}</td>
+                <td>{{attack.country_txt}}</td>
+                <td>{{attack.city}}</td>
+                <td>{{attack.iyear}}</td>
+                <td>{{attack.latitude}}</td>
+                <td>{{attack.longitude}}</td>
+                <td>{{attack.summary}}</td>
+                <td>{{attack.attacktype1_txt}}</td>
+                <td>{{attack.targtype1_txt}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
