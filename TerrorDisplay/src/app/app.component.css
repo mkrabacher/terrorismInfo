@@ -1,0 +1,13 @@
+#nav, #map {
+    display: inline-block;
+}
+
+#nav {
+    width: 30%;
+    vertical-align: top;
+}
+
+#map {
+    width: 65%;
+    height: 200px;
+}
