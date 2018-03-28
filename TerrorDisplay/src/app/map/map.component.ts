@@ -10,13 +10,12 @@ import { HttpService } from '../http.service';
 export class MapComponent implements OnInit, OnChanges {
     @ViewChild('gmap') gmapElement: any;
     @Input() attacks;
+    @Input() loading;
     map: google.maps.Map;
     mappedAttacks;
     heatmap;
     filterYear;
-    loading;
     constructor(private _httpService: HttpService) {
-        this.loading = true;
     }
 
     ngOnInit() {
@@ -67,45 +66,6 @@ export class MapComponent implements OnInit, OnChanges {
         const lng =  Math.floor(Math.random() * 180);
         this.heatmap.data.push({location: new google.maps.LatLng(lat, lng), weight: 1000});
         console.log('point added at ', lat, lng);
-    }
-
-    filter() {
-        let arr = [];
-        const returnArr = [];
-        if (this.filterYear === 'All') {
-            arr = this.attacks;
-        } else {
-            // tslint:disable-next-line:radix
-            arr = this.attacks.filter(entry => entry.iyear === parseInt(this.filterYear));
-        }
-        let test = 1;
-        console.log(this.attacks[1000]);
-        if (this.attacks[1000]['nkill']) {
-            // tslint:disable-next-line:radix
-            test += parseInt(this.attacks[1000]['nkill']);
-        }
-        if (this.attacks[1000]['nwound']) {
-            // tslint:disable-next-line:radix
-            test += (parseInt(this.attacks[1000]['nwound']) / 2);
-        }
-        // tslint:disable-next-line:radix
-        console.log(test);
-        for (let i = 0; i < arr.length; i++) {
-            const lat = this.attacks[i]['latitude'];
-            const lng = this.attacks[i]['longitude'];
-            let wght = 1;
-            if (this.attacks[i]['nkill']) {
-                // tslint:disable-next-line:radix
-                wght += parseInt(this.attacks[i]['nkill']);
-            }
-            if (this.attacks[i]['nwound']) {
-                // tslint:disable-next-line:radix
-                wght += (parseInt(this.attacks[i]['nwound']) / 2);
-            }
-            returnArr.push({location: new google.maps.LatLng(lat, lng), weight: wght});
-        }
-        console.log(returnArr);
-        this.setHeatmap(returnArr);
     }
 
     changeRadius() {
