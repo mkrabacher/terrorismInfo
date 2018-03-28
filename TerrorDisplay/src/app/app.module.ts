@@ -10,20 +10,23 @@ import { MapComponent } from './map/map.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HttpService } from './http.service';
 import { DisplayComponent } from './display/display.component';
-
+import { GraphComponent } from './graph/graph.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     PageNotFoundComponent,
-    DisplayComponent
+    DisplayComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ChartsModule
   ],
   providers: [HttpService],
   bootstrap: [AppComponent]
