@@ -91,11 +91,17 @@ export class MapComponent implements OnInit, OnChanges {
         let count = 0;
         let kills = 0;
         let wounds = 0;
+
+
+
+        // build initial hashmap
+
         for (let i = 0; i < this.attacks.length; i++) {
             const key = parseFloat(this.attacks[i]['latitude']).toFixed(0) + '&' + parseFloat(this.attacks[i]['longitude']).toFixed(0);
             if (this.attacks[i]['nkill']) {
                 // tslint:disable-next-line:radix
                 kills = parseInt(this.attacks[i]['nkill']);
+
             }
             if (this.attacks[i]['nwounds']) {
                 // tslint:disable-next-line:radix
@@ -112,6 +118,43 @@ export class MapComponent implements OnInit, OnChanges {
         console.log('# of points to plot:', count);
         console.log('Hash Map:', HashMap);
         return HashMap;
+
+            }
+            if (this.attacks[i]['nwounds']) {
+                // tslint:disable-next-line:radix
+                wounds = parseInt(this.attacks[i]['nwounds']);
+            }
+            const weight = kills + wounds + 1;
+            if (HashMap[key]) {
+                HashMap[key] += weight;
+            } else {
+                HashMap[key] = weight;
+                count++;
+            }
+        }
+        console.log('# of points to plot:', count);
+        console.log('Hash Map:', HashMap);
+
+        // // iterate through it repeatedly always shrinking the decimal you round
+        // if still greater than 1000 grab every third key and call it a day.
+        if (count > 1000) {
+            let ct = 0;
+            const arr = [];
+            for (const key in HashMap) {
+                if (HashMap.hasOwnProperty(key)) {
+                    if (ct === 2) {
+                        // tslint:disable-next-line:radix
+                        arr.push(new google.maps.LatLng(parseInt(key.split('&')[0]), parseInt(key.split('&')[1])));
+                        ct = 0;
+                    } else {
+                        ct++;
+                    }
+                }
+            }
+            return arr;
+        }
+        // return HashMap;
+
     }
 
     attacksToHeatData() {
