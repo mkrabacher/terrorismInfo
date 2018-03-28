@@ -18,10 +18,10 @@ export class AppComponent implements OnInit {
         this.attacks = [];
         this.displayedAttacks = [];
         this.years = ['all'];
-        this.filterYear = this.years[0];
         for (let i = 0; i < 40; i++) {
             this.years.push(1970 + i);
         }
+        this.filterYear = this.years[0];
     }
 
     ngOnInit() {
