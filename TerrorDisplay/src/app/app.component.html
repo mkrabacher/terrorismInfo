@@ -1,4 +1,17 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<h2>Welcome to {{ title }}!</h2>
 
-<router-outlet></router-outlet>
+<div id="nav">
+    <h1>Welcome to {{ title }}!</h1>
+    <h3>Filter By Year:</h3>
+    <select name="year" id="yearSelector" [(ngModel)]="filterYear">
+        <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+    </select>
+    <button (click)="filterByYear()">Filter</button>
+</div>
+
+<div id="map">
+    <app-map [attacks]='displayedAttacks' [loading]="loading"></app-map>
+</div>
+<div id="display">
+    <app-display [attacks]='displayedAttacks' [loading]="loading"></app-display>
+</div>

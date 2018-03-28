@@ -1,14 +1,8 @@
-
-<div>
-    <h3>Filter by:</h3>
-    <select name="year" id="yearSelector" [(ngModel)]="filterYear">
-        <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
-    </select>
-    <button (click)="filter()">Filter</button>
-</div>
+#entries for this component:{{attacks.length}}
 
 <div>
     <h2>here's data</h2>
+    <h5 *ngIf="!loading">Showing entries {{rangeStart}} to {{rangeEnd}} of {{attacks.length}}</h5>
     <table>
         <thead>
             <th>Region</th>
