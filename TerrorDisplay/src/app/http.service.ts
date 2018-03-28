@@ -10,5 +10,4 @@ export class HttpService {
         console.log('getting attacks in service');
         return this._http.get('/allAttacks');
     }
-
 }

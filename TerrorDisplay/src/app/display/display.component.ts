@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { HttpService } from '../http.service';
 
 @Component({
@@ -6,8 +6,8 @@ import { HttpService } from '../http.service';
     templateUrl: './display.component.html',
     styleUrls: ['./display.component.css']
 })
-export class DisplayComponent implements OnInit {
-    attacks: Array<any>;
+export class DisplayComponent implements OnInit, OnChanges {
+    @Input() attacks;
     displayAttacks;
     rangeStart;
     rangeEnd;
@@ -22,31 +22,33 @@ export class DisplayComponent implements OnInit {
         }
     }
 
+    ngOnChanges() {
+        console.log('shit changed yo.');
+        this.loadData(this.attacks);
+        this.loading = false;
+    }
+
     ngOnInit() {
         this.rangeStart = 0;
         this.rangeEnd = 100;
         this.loading = true;
-        this.getAttacksThroughService();
     }
 
     filter() {
+        this.displayAttacks = [];
+        this.loading = true;
         if (this.filterYear === 'all') {
             this.displayAttacks = this.attacks;
         } else {
             // tslint:disable-next-line:radix
             this.displayAttacks = this.attacks.filter(entry => entry.iyear === parseInt(this.filterYear));
+            this.loading = false;
         }
         console.log(this.displayAttacks);
     }
 
-    getAttacksThroughService() {
-        const observable = this._httpService.getAttacks();
-        observable.subscribe(data => {
-            this.attacks = data['attacks'];
-            this.displayAttacks = this.attacks.slice(this.rangeStart, this.rangeEnd);
-            console.log(this.attacks);
-            this.loading = false;
-        });
+    loadData(data) {
+        this.displayAttacks = this.attacks.slice(this.rangeStart, this.rangeEnd);
     }
 
 }
