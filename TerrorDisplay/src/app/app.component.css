@@ -1,3 +1,7 @@
+.component {
+    border: 3px solid black;
+}
+
 #nav, #map {
     display: inline-block;
 }
@@ -9,5 +13,14 @@
 
 #map {
     width: 65%;
-    height: 200px;
+    height: 540px;
+}
+
+#custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
 }

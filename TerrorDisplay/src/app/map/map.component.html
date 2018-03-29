@@ -16,5 +16,5 @@
     <button (click)="changeOpacity()">Change opacity</button>
     <button (click)="clearHeatMap()">Clear Heat</button>
 </div>
-<h3 *ngIf="loading">Loading...</h3>
+<h3 id="loading" *ngIf="loading">Loading...</h3>
 <div id="gmap" #gmap></div>

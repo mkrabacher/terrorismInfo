@@ -1,8 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<app-graph [attacks]='displayedAttacks'></app-graph>
 <div id="nav">
     <h1>Welcome to {{ title }}!</h1>
+
     <h3>Filter By Year:</h3>
     <select name="year" id="yearSelector" [(ngModel)]="filterYear">
         <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
@@ -10,9 +10,12 @@
     <button (click)="filterByYear()">Filter</button>
 </div>
 
-<div id="map">
+<div class="component" id="map">
     <app-map [attacks]='displayedAttacks' [loading]="loading"></app-map>
 </div>
-<div id="display">
+<div class="component" id="graph">
+    <app-graph [attacks]='displayedAttacks'></app-graph>
+</div>
+<div class="component" id="display">
     <app-display [attacks]='displayedAttacks' [loading]="loading"></app-display>
 </div>

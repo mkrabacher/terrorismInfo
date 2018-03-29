@@ -23,6 +23,16 @@ h1 {
     height:400px
 }
 
+#loading {
+    position: relative;
+    display: inline-block;
+    height: 1px;
+    width: 1px;
+    left: 100px;
+    top: 100px;
+    z-index: 1000;
+}
+
 h1 {
     position:absolute;
     background:black;
