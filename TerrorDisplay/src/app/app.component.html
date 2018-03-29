@@ -1,21 +1,42 @@
 <!--The content below is only a placeholder and can be replaced.-->
-
-<div id="nav">
-    <h1>Welcome to {{ title }}!</h1>
-
-    <h3>Filter By Year:</h3>
-    <select name="year" id="yearSelector" [(ngModel)]="filterYear">
-        <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
-    </select>
-    <button (click)="filterByYear()">Filter</button>
-</div>
-
-<div class="component" id="map">
-    <app-map [attacks]='displayedAttacks' [loading]="loading"></app-map>
-</div>
-<div class="component" id="graph">
-    <app-graph [attacks]='displayedAttacks'></app-graph>
-</div>
-<div class="component" id="display">
-    <app-display [attacks]='displayedAttacks' [loading]="loading"></app-display>
+<div style="width: 1500px; margin:auto;">
+    <div id="title">
+        <h1>{{ title }}</h1>
+    </div>
+    <div id="filter-bar">
+        <h3>Currently viewing:</h3>
+        <p>{{displayedAttacks.length}} entries of {{attacks.length}}</p>
+        <h3>Filter By Year:</h3>
+        <select name="year" id="yearSelector" [(ngModel)]="filters.year">
+            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+        </select>
+        <button (click)="filter()">Filter</button>
+        <h3>Filter By Country:</h3>
+        <select name="country" id="countrySelector" [(ngModel)]="filters.country">
+            <option *ngFor="let country of countries" value="{{country}}">{{country}}</option>
+        </select>
+        <button (click)="filter()">Filter</button>
+        <h3>Filter By Region:</h3>
+        <select name="region" id="regionSelector" [(ngModel)]="filters.region">
+            <option *ngFor="let region of regions" value="{{region}}">{{region}}</option>
+        </select>
+        <button (click)="filter()">Filter</button>
+        <h3>Filter By Type:</h3>
+        <select name="atkType" id="atkTypeSelector" [(ngModel)]="filters.atkType">
+            <option *ngFor="let atkType of atkTypes" value="{{atkType}}">{{atkType}}</option>
+        </select>
+        <button (click)="filter()">Filter</button>
+    </div>
+    <div id="wrapper">
+        <h1 id="loading" *ngIf=loading>Loading Data. Please be patient.</h1>
+        <div class="component" id="graph">
+            <app-graph [attacks]='displayedAttacks'></app-graph>
+        </div>
+        <div class="component" id="map">
+            <app-map [attacks]='displayedAttacks' [loading]="loading"></app-map>
+        </div>
+        <div class="component" id="display">
+            <app-display [attacks]='displayedAttacks' [loading]="loading"></app-display>
+        </div>
+    </div>
 </div>

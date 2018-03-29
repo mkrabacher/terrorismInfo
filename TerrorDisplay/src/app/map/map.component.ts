@@ -112,8 +112,8 @@ export class MapComponent implements OnInit, OnChanges {
                 count++;
             }
         }
-        console.log('# of points to plot:', count);
-        console.log('Hash Map:', HashMap);
+        // console.log('# of points to plot:', count);
+        // console.log('Hash Map:', HashMap);
 
         for (const key in HashMap) {
             if (HashMap.hasOwnProperty(key)) {
@@ -169,7 +169,7 @@ export class MapComponent implements OnInit, OnChanges {
 
     clearHeatMap() {
         if (this.heatmap) {
-            console.log('clearing map');
+            // console.log('clearing map');
             this.heatmap.setMap(null);
         }
     }

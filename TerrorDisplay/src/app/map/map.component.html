@@ -1,20 +1,20 @@
-#entries for this component:{{attacks.length}}
-<form class="form-inline" #form="ngForm" (ngSubmit)="setCenter($event)" ac>
-    <label class="form-group">Latitude:
-        <input type="text" class="form-control" name="latitude" [(ngModel)]="latitude" placeholder="Enter latitude" required>
-    </label>
-    <label class="form-group">Latitude:
-        <input type="text" class="form-control" name="longitude" [(ngModel)]="longitude" placeholder="Enter longitude" required>
-    </label>
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Go</button>
-</form>
-<button (click)="addRandPoint()">Add Random point</button>
+
+<div id="gmap" #gmap></div>
 <div id="floating-panel">
+    <form class="form-inline" #form="ngForm" (ngSubmit)="setCenter($event)" ac>
+        <label class="form-group">Latitude:
+            <input type="text" class="form-control" name="latitude" [(ngModel)]="latitude" placeholder="latitude" required>
+        </label>
+        <label class="form-group">Latitude:
+            <input type="text" class="form-control" name="longitude" [(ngModel)]="longitude" placeholder="longitude" required>
+        </label>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Go</button>
+    </form>
+    <button (click)="addRandPoint()">Add Random point</button>
     <button (click)="toggleHeatmap()">Toggle Heatmap</button>
     <button (click)="changeGradient()">Change gradient</button>
     <button (click)="changeRadius()">Change radius</button>
     <button (click)="changeOpacity()">Change opacity</button>
-    <button (click)="clearHeatMap()">Clear Heat</button>
+    <!-- <button (click)="clearHeatMap()">Clear Heat</button> -->
 </div>
-<h3 id="loading" *ngIf="loading">Loading...</h3>
-<div id="gmap" #gmap></div>
+<!-- <h3 id="loading" *ngIf="loading">Loading...</h3> -->
