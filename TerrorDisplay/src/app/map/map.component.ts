@@ -25,9 +25,11 @@ export class MapComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        this.setHeatmap(this.attacksToHeatData());
+        // this.setHeatmap(this.attacksToHeatData());
+        this.setHeatmap(this.fullCompress(this.attacks));
     }
 
+// complete function
     setMapType(mapTypeId: string) {
         this.map.setMapTypeId(mapTypeId);
     }
@@ -76,6 +78,13 @@ export class MapComponent implements OnInit, OnChanges {
         this.heatmap.set('opacity', this.heatmap.get('opacity') ? null : 0.2);
     }
 
+    clearHeatMap() {
+        if (this.heatmap) {
+            // console.log('clearing map');
+            this.heatmap.setMap(null);
+        }
+    }
+
     initMap() {
         const mapProp = {
             center: new google.maps.LatLng(20, 0),
@@ -85,6 +94,8 @@ export class MapComponent implements OnInit, OnChanges {
         this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
         // this.setHeatmap(this.attacks);
     }
+
+// in progess functions
 
     compressLargeDataSet() {
         const HashMap = {};
@@ -112,8 +123,8 @@ export class MapComponent implements OnInit, OnChanges {
                 count++;
             }
         }
-        // console.log('# of points to plot:', count);
-        // console.log('Hash Map:', HashMap);
+        console.log('# of points to plot:', count);
+        console.log('Hash Map:', HashMap);
 
         for (const key in HashMap) {
             if (HashMap.hasOwnProperty(key)) {
@@ -139,10 +150,10 @@ export class MapComponent implements OnInit, OnChanges {
                 if (HashMap.hasOwnProperty(key)) {
                     const element = HashMap[key];
                     // tslint:disable-next-line:radix
-                        const lat = parseInt(key.split('&')[0]);
-                        // tslint:disable-next-line:radix
-                        const lng = parseInt(key.split('&')[1]);
-                        arr.push({location: new google.maps.LatLng(lat, lng), weight: HashMap[key]});
+                    const lat = parseInt(key.split('&')[0]);
+                    // tslint:disable-next-line:radix
+                    const lng = parseInt(key.split('&')[1]);
+                    arr.push({ location: new google.maps.LatLng(lat, lng), weight: HashMap[key] });
                     // if (arr.length >= 2000) {
                     //     break;
                     // }
@@ -161,18 +172,109 @@ export class MapComponent implements OnInit, OnChanges {
         } else { // --------if filter returns less than 1000 points to plot-------------------
             const arr = [];
             for (let i = 0; i < this.attacks.length; i++) {
-                arr.push({location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude'])});
+                arr.push({ location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude']) });
             }
             return arr;
         }
     }
 
-    clearHeatMap() {
-        if (this.heatmap) {
-            // console.log('clearing map');
-            this.heatmap.setMap(null);
+    atks2DispAsHD() {
+        if (this.attacks.length > 1000) {
+            // compress attacks via merging nearby points with hashmap => HashMap
+
+            // Turn HashMap into GMaps HM layer array => arr
+
+            // set heat map with array.
+
+            // this.setHeatmap(arr);
+
+        } else { // --------if filter returns less than 1000 points to plot-------------------
+            const arr = [];
+            for (let i = 0; i < this.attacks.length; i++) {
+                arr.push({ location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude']) });
+            }
+            return arr;
         }
     }
+
+// projeckt COMPRESS
+    compress(data, dec) {
+        const HashMap = {};
+        let count = 0;
+        let kills = 0;
+        let wounds = 0;
+        for (let i = 0; i < this.attacks.length; i++) {
+            const key = parseFloat(this.attacks[i]['latitude']).toFixed(dec) + '&' + parseFloat(this.attacks[i]['longitude']).toFixed(dec);
+            if (this.attacks[i]['nkill']) {
+                // tslint:disable-next-line:radix
+                kills = parseInt(this.attacks[i]['nkill']);
+            }
+            if (this.attacks[i]['nwounds']) {
+                // tslint:disable-next-line:radix
+                wounds = parseInt(this.attacks[i]['nwounds']);
+            }
+            const weight = kills + wounds + 1;
+            if (HashMap[key]) {
+                HashMap[key] += weight;
+            } else {
+                HashMap[key] = weight;
+                count++;
+            }
+        }
+        return HashMap;
+    }
+
+    hash2Arr(HashMap) {
+        const arr = [];
+        for (const key in HashMap) {
+            if (HashMap.hasOwnProperty(key)) {
+                // tslint:disable-next-line:radix
+                const lat = parseInt(key.split('&')[0]);
+                // tslint:disable-next-line:radix
+                const lng = parseInt(key.split('&')[1]);
+                const weight = HashMap[key];
+                arr.push({ location: new google.maps.LatLng(lat, lng), weight: HashMap[key] });
+            }
+        }
+        return arr;
+    }
+
+    fullCompress(attacks) {
+        let dec = 4;
+
+        // loop through attacks and add to HashMap with keys as lat&lng and values as weights.
+        //      each lat & lng will be rounded to 4 decimals.
+        let HashMap = this.compress(attacks, dec);
+
+        // turn hashMap into GMaps HM layer array
+        let arr = this.hash2Arr(HashMap);
+
+        // check that array length is <= 1000. if not do above again but with 1 less decimal.
+        while (arr.length > 1000 && dec > 0) {
+            console.log(dec);
+            dec--;
+            HashMap = this.compress(attacks, dec);
+            arr = this.hash2Arr(HashMap);
+        }
+
+        // if decimal goes down to 0 with > 1000 points, take a third of the array.
+        //      (there is only one situation where this is necessary, with all attacks.)
+        if (arr.length > 1000) {
+            const thirdArr = [];
+            for (let i = 0; i < arr.length; i += 3) {
+                thirdArr.push(arr[i]);
+            }
+            arr = thirdArr;
+        }
+
+        console.log('Hash Map:', HashMap);
+        console.log('# of points to plot:', arr.length);
+        console.log('Plot Points:', arr);
+
+        return arr;
+    }
+
+
 
     setHeatmap(newData) {
         this.clearHeatMap();
