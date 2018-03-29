@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { HttpService } from '../http.service';
 
 
@@ -7,82 +7,48 @@ import { HttpService } from '../http.service';
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
-export class GraphComponent implements OnInit, OnChanges {
+export class GraphComponent implements OnChanges {
   @Input() attacks;
   attack_dict: any ;
   barChartOptions: any = { scaleShowVerticalLines: false, responsive: true };
   barChartLabels: any = [];
-  barChartType: string = 'bar';
+  barChartType: string = 'horizontalBar';
   barChartLegend: boolean = true;
-  barChartData = [ {data: [], label: 'Total Attacks per Country'} ];
+  barChartData: any = [ { data: [], label: 'Total Attacks per Region' }];
 
-  makeTrue = false;
   constructor(private _httpService: HttpService) { }
 
-  ngOnInit() {
-    
-  }
-
   ngOnChanges(){
-    console.log(this.attacks,"ohhooh")
     this.takeData();
   }
 
-  doThis(){
-    this.makeTrue = true;
-  }
   takeData(){
     var dict = {}
-    var killdict = {}
     for(var i=0; i< this.attacks.length;i++){ 
-
-      if(dict[this.attacks[i].country_txt]){
-        dict[this.attacks[i].country_txt] += 1;
-        if(this.attacks[i].nkill != null){
-          killdict[this.attacks[i].country_txt] += parseInt(this.attacks[i].nkill);
-        }
-        if(this.attacks[i].nwound != null){
-          killdict[this.attacks[i].country_txt] += parseInt(this.attacks[i].nwound);
-        }
-      }
-      else{
-        dict[this.attacks[i].country_txt] = 1;
-
-        if(typeof(this.attacks[i].nkill) == "number" && this.attacks[i].nwound == "number"){
-          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nkill) + parseInt(this.attacks[i].nwound);
-        }
-        if(typeof(this.attacks[i].nkill) == "number" && this.attacks[i].nwound != "number"){
-          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nkill);
-        }
-        else{
-          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nwound)
-        }
-
+      if(dict[this.attacks[i].region_txt]){
+        dict[this.attacks[i].region_txt] += 1;
+      }else{
+        dict[this.attacks[i].region_txt] = 1;
       }
     }
-    console.log(killdict)
     this.makeTable(dict);
   }
 
   makeTable(dict){
-    this.barChartData = [ {data: [], label: 'Total Attacks per Country'} ]
-    this.barChartLabels;
-    this.barChartLegend;
+    this.barChartData[0]['data'] = [];
+
     for(let x in dict){
       this.barChartData[0]['data'].push(dict[x]);
-      this.barChartLabels.push(x);
+      if(this.barChartLabels.length < 12){
+        this.barChartLabels.push(x);
+      }
     }
-    console.log("BarGraph data:",this.barChartData[0])
-    console.log("BarGraph labels:",this.barChartLabels)
     this.initializeTable();
   }
 
-  // events
-  public chartClicked(e:any):void {  console.log(e);  }
-  public chartHovered(e:any):void {  console.log(e);  }
- 
-  public initializeTable():void {
-    // really just making a clone so 
+  initializeTable(){
+    // really just making a clone so Angular can 
+    // actually render the page
     let data = this.barChartData[0]['data'];
     let clone = JSON.parse(JSON.stringify(this.barChartData));
     clone[0].data = data;
@@ -90,16 +56,30 @@ export class GraphComponent implements OnInit, OnChanges {
   }
   changeGraph(){
     if(this.barChartType == "bar"){
-      this.barChartType = "line";
+      this.barChartType = "doughnut";
       return;
     }
-    if(this.barChartType == "line"){
+    
+    if(this.barChartType == "doughnut"){
       this.barChartType = "horizontalBar";
       return;
     }
     if(this.barChartType == "horizontalBar"){
-      this.barChartType = "bar";
-      return;
+      this.barChartType = "pie";
+      this.barChartData[0]['backgroundColor'] = [
+        '#1f77b4', '#ff7f0e', '#2ca02c', '#b8d7b4',
+        '#7f7f7f', '#ff0000', '#00ff00', '#0000ff',
+        '#000000', '##2c7389', '#2c7389', '#17becf' ]
+        return;
+      }
+      if(this.barChartType == "pie"){
+        this.barChartType = "bar";
+      }
     }
+
+    // chart.js events for onclick/onhover
+    chartClicked(e:any):void {  console.log(e);  }
+    chartHovered(e:any):void {  console.log(e);  }
   }
-}
+ 
+  
