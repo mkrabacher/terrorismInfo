@@ -19,9 +19,12 @@ export class GraphComponent implements OnInit, OnChanges {
   makeTrue = false;
   constructor(private _httpService: HttpService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
 
   ngOnChanges(){
+    console.log(this.attacks,"ohhooh")
     this.takeData();
   }
 
@@ -31,26 +34,46 @@ export class GraphComponent implements OnInit, OnChanges {
   takeData(){
     var dict = {}
     var killdict = {}
-    for(var i=0; i< this.attacks.length;i++){
+    for(var i=0; i< this.attacks.length;i++){ 
 
       if(dict[this.attacks[i].country_txt]){
         dict[this.attacks[i].country_txt] += 1;
+        if(this.attacks[i].nkill != null){
+          killdict[this.attacks[i].country_txt] += parseInt(this.attacks[i].nkill);
+        }
+        if(this.attacks[i].nwound != null){
+          killdict[this.attacks[i].country_txt] += parseInt(this.attacks[i].nwound);
+        }
       }
       else{
         dict[this.attacks[i].country_txt] = 1;
+
+        if(typeof(this.attacks[i].nkill) == "number" && this.attacks[i].nwound == "number"){
+          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nkill) + parseInt(this.attacks[i].nwound);
+        }
+        if(typeof(this.attacks[i].nkill) == "number" && this.attacks[i].nwound != "number"){
+          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nkill);
+        }
+        else{
+          killdict[this.attacks[i].country_txt] = parseInt(this.attacks[i].nwound)
+        }
+
       }
     }
-    console.log("GOTEEEM",dict);
+    console.log(killdict)
     this.makeTable(dict);
   }
 
   makeTable(dict){
+    this.barChartData = [ {data: [], label: 'Total Attacks per Country'} ]
+    this.barChartLabels;
+    this.barChartLegend;
     for(let x in dict){
       this.barChartData[0]['data'].push(dict[x]);
       this.barChartLabels.push(x);
     }
-    console.log("barchart data:",this.barChartData[0])
-    console.log("barchart labels:",this.barChartLabels)
+    console.log("BarGraph data:",this.barChartData[0])
+    console.log("BarGraph labels:",this.barChartLabels)
     this.initializeTable();
   }
 
@@ -62,7 +85,6 @@ export class GraphComponent implements OnInit, OnChanges {
     // really just making a clone so 
     let data = this.barChartData[0]['data'];
     let clone = JSON.parse(JSON.stringify(this.barChartData));
-    console.log("clone",clone)
     clone[0].data = data;
     this.barChartData = clone;
   }
