@@ -92,6 +92,7 @@ export class MapComponent implements OnInit, OnChanges {
         let kills = 0;
         let wounds = 0;
 
+        // this badly needs a scaling toFixed number. rounding our latlng's to 0 for everything situation isn't good.
         // build initial hashmap
         for (let i = 0; i < this.attacks.length; i++) {
             const key = parseFloat(this.attacks[i]['latitude']).toFixed(0) + '&' + parseFloat(this.attacks[i]['longitude']).toFixed(0);
@@ -111,26 +112,20 @@ export class MapComponent implements OnInit, OnChanges {
                 count++;
             }
         }
-
         console.log('# of points to plot:', count);
         console.log('Hash Map:', HashMap);
-        // // iterate through it repeatedly always shrinking the decimal you round
-        // if still greater than 1000 grab every third key and call it a day.
-        if (count > 1000) {
-            let ct = 0;
-            const arr = [];
-            for (const key in HashMap) {
-                if (HashMap.hasOwnProperty(key)) {
-                    if (ct === 2) {
-                        // tslint:disable-next-line:radix
-                        arr.push(new google.maps.LatLng(parseInt(key.split('&')[0]), parseInt(key.split('&')[1])));
-                        ct = 0;
-                    } else {
-                        ct++;
-                    }
-                }
+
+        for (const key in HashMap) {
+            if (HashMap.hasOwnProperty(key)) {
+                const weight = HashMap[key];
             }
         }
+
+        // options for results still above 1000:
+
+        // // iterate through it repeatedly always shrinking the decimal you round
+
+        // // if still greater than 1000 grab every third key and call it a day.
 
         return HashMap;
     }
@@ -139,23 +134,34 @@ export class MapComponent implements OnInit, OnChanges {
         this.clearHeatMap();
         if (this.attacks.length > 1000) { // --------if filter returns more than 1000 points to plot-------------------
             const HashMap = this.compressLargeDataSet();
-            let arr = [];
+            const arr = [];
             for (const key in HashMap) {
                 if (HashMap.hasOwnProperty(key)) {
                     const element = HashMap[key];
                     // tslint:disable-next-line:radix
-                    arr.push(new google.maps.LatLng(parseInt(key.split('&')[0]), parseInt(key.split('&')[1])));
-                    if (arr.length >= 1000) {
-                        this.setHeatmap(arr);
-                        arr = [];
-                    }
+                        const lat = parseInt(key.split('&')[0]);
+                        // tslint:disable-next-line:radix
+                        const lng = parseInt(key.split('&')[1]);
+                        arr.push({location: new google.maps.LatLng(lat, lng), weight: HashMap[key]});
+                    // if (arr.length >= 2000) {
+                    //     break;
+                    // }
                 }
             }
+            // this cuts the array of latlng in a third
+            if (arr.length > 1000) {
+                const thirdArr = [];
+                for (let i = 0; i < arr.length; i += 3) {
+                    thirdArr.push(arr[i]);
+                }
+                return thirdArr;
+            }
+
             return arr;
         } else { // --------if filter returns less than 1000 points to plot-------------------
             const arr = [];
             for (let i = 0; i < this.attacks.length; i++) {
-                arr.push(new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude']));
+                arr.push({location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude'])});
             }
             return arr;
         }
@@ -173,9 +179,9 @@ export class MapComponent implements OnInit, OnChanges {
         this.heatmap = new google.maps.visualization.HeatmapLayer({
             data: newData,
             map: this.map,
-            radius: 25
+            radius: 20
         });
-        console.log(this.heatmap);
+        console.log('heatmap length: ', this.heatmap.data.length);
     }
 
 }
