@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
         } else {
             // tslint:disable-next-line:radix
             this.displayedAttacks = this.attacks.filter(entry => entry.iyear === parseInt(this.filterYear));
+            console.log("thisisReuben", this.displayedAttacks)
             this.loading = false;
         }
         console.log(this.displayedAttacks);
