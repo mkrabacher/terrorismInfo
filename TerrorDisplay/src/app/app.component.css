@@ -13,42 +13,67 @@ h1 {
     display: inline-block
 }
 
+p {
+    padding: 0px;
+    margin: 0px;
+}
+
+h3 {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+select {
+    width: 115px;
+}
+
 #loading {
     position: absolute;
-    top: 40%;
-    left: 30%;
+    font-size: 50px;
+    /* margin: auto; */
     z-index: 1000;
+    min-width: 745px;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#filter-bar {
+    position: sticky;
+    top: 0;
+    margin-top: 60px;
+    width: 170px;
 }
 
 #wrapper {
+    vertical-align: top;
     margin: auto;
-    border: 
+    width: 1300px;
 }
 
-#nav, #map {
+#title, #map, #filter-bar, #wrapper {
     display: inline-block;
 }
 
-#nav {
+#title {
     position: absolute;
-    width: 30%;
     vertical-align: top;
     z-index: 20;
 }
 
 #map, #graph {
-    min-width: 700px;
-    width: 44%;
-    height: 442px;
+    width: 49%;
+    height: 500px;
     vertical-align: top;
     margin: auto;
 }
 
 
 #display {
+    margin-top: 4px;
     min-width: 700px;
-    width: 45%;
-    height: 540px;
+    width: 99%;
+    min-height: 540px;
 }
 
 #custom-handle {
