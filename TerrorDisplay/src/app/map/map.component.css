@@ -12,6 +12,10 @@ body * {
     font-weight:200
 }
 
+input {
+    width: 80px;
+}
+
 h1 {
     position:absolute;
     background:white;
@@ -20,7 +24,7 @@ h1 {
 
 #gmap {
     width:100%;
-    height:400px
+    height:458px
 }
 
 #loading {
@@ -28,9 +32,9 @@ h1 {
     display: inline-block;
     height: 1px;
     width: 1px;
-    left: 100px;
-    top: 100px;
-    z-index: 1000;
+    left: 300px;
+    top: -300px;
+    z-index: 110;
 }
 
 h1 {
@@ -39,5 +43,5 @@ h1 {
     color:white;
     padding:10px;
     font-weight:200;
-    z-index:10000;
+    z-index:100;
 }
