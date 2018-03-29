@@ -1,5 +1,28 @@
 .component {
     border: 3px solid black;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+h1 {
+    background: black;
+    color: white;
+    padding: 10px;
+    margin: 10px;
+    font-weight: 200;
+    display: inline-block
+}
+
+#loading {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    z-index: 1000;
+}
+
+#wrapper {
+    margin: auto;
+    border: 
 }
 
 #nav, #map {
@@ -7,12 +30,24 @@
 }
 
 #nav {
+    position: absolute;
     width: 30%;
     vertical-align: top;
+    z-index: 20;
 }
 
-#map {
-    width: 65%;
+#map, #graph {
+    min-width: 700px;
+    width: 44%;
+    height: 442px;
+    vertical-align: top;
+    margin: auto;
+}
+
+
+#display {
+    min-width: 700px;
+    width: 45%;
     height: 540px;
 }
 
