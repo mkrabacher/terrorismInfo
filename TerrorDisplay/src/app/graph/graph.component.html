@@ -1,0 +1,31 @@
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<script>
+
+  $('#thisbutton').click(function(){
+    var x = document.getElementById("thischart");
+    console.log("WE DOIN JQUERY")
+    x.update();
+
+  })
+</script>
+
+<script src="node_modules/chart.js/src/chart.js"></script>
+<p>hi</p>
+<div>
+  <div style="display: block">
+    <canvas baseChart id="thischart"
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+  </div>
+  <button (click)="randomize()">Update</button>
+  <button id="thisbutton">Update</button>
+  <button (click)="changeGraph()">Nah this shit boring</button>
+</div>
