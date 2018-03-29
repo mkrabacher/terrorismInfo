@@ -78,8 +78,8 @@ export class MapComponent implements OnInit, OnChanges {
 
     initMap() {
         const mapProp = {
-            center: new google.maps.LatLng(27.775, 52.434),
-            zoom: 4,
+            center: new google.maps.LatLng(20, 0),
+            zoom: 2,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
