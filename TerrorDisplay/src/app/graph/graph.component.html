@@ -1,15 +1,14 @@
 <script src="node_modules/chart.js/src/chart.js"></script>
 
   <div id="mainGraph">
-    <canvas baseChart id="canvas"
+    <canvas baseChart
       [datasets]="barChartData"
       [labels]="barChartLabels"
       [options]="barChartOptions"
       [legend]="barChartLegend"
       [chartType]="barChartType"
-      (chartHover)="chartHovered($event)"
-      (chartClick)="chartClicked($event)">
+      >
     </canvas>
   </div>
-  <button (click)="changeGraph()">Nah this shit boring</button>
-  <button (click)="changeData()">Change Data</button>
+  <button (click)="changeGraph()">Change the View</button>
+  <button (click)="changeData()">Change the Data</button>
