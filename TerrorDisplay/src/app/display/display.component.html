@@ -1,6 +1,6 @@
 <div>
     <h2>here's data</h2>
-    <h5 *ngIf="!loading">Showing entries {{rangeStart}} to {{rangeEnd}} of {{attacks.length}}</h5>
+    <h5 id="disp-nav" *ngIf="!loading"><a (click)=prev()>Prev</a> -- Displaying Attacks {{rangeStart}} to {{rangeEnd}} of {{attacks.length}} -- <a (click)=next()>Next</a></h5>
     <table>
         <thead>
             <th id="region-head">Region</th>
@@ -27,6 +27,6 @@
                 <td>{{attack.targtype1_txt}}</td>
             </tr>
         </tbody>
-        <p><a (click)=next()>Next</a></p>
     </table>
+    <h5 id="disp-nav" *ngIf="!loading"><a (click)=prev()>Prev</a> -- Displaying Attacks {{rangeStart}} to {{rangeEnd}} of {{attacks.length}} -- <a (click)=next()>Next</a></h5>
 </div>
