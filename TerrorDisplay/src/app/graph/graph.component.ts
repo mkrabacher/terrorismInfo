@@ -11,6 +11,7 @@ export class GraphComponent implements OnChanges, OnInit {
   switch: boolean=false;
   deathBool: boolean=true;
   @Input() attacks;
+  @Input() loading;
 
   barChartLabels: any = [];
   barChartType: string = 'horizontalBar';
@@ -77,8 +78,6 @@ export class GraphComponent implements OnChanges, OnInit {
       }
 
     }
-    console.log("kill", this.killdict)
-    console.log("dict", this.dict)
     
     this.makeTable(this.killdict, this.dict, this.attackdict);
   }
@@ -149,18 +148,19 @@ export class GraphComponent implements OnChanges, OnInit {
     }
     if(this.barChartType == "horizontalBar"){
       this.barChartType = "pie";
-      this.barChartOptions.title.text = "Amount of deaths (outer) vs. Amount of wounded (inner)";
-      
+      if(this.switch == false){
+        this.barChartOptions.title.text = "Amount of deaths (outer) vs. Amount of wounded (inner)";  
+      }else{
+        this.barChartOptions.title.text = "Types of Attacks";
+      }
       this.barChartData[0]['backgroundColor'] = [
         // '#1f77b4', '#ff7f0e', '#2ca02c', '#b8d7b4',
         '#7f7f7f', '#ff0000', '#00ff00', '#0000ff',
         '#000000', '##2c7389', '#2c7389', '#17becf' ]
         return;
       }
+
       if(this.barChartType == "pie"){
-        this.barChartType = "doughnut";
-      }
-      if(this.barChartType == "doughnut"){
         this.barChartType = "bar";
         this.barChartOptions.title.text = "";
         return;
