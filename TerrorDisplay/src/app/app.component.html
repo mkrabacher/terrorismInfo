@@ -10,22 +10,19 @@
         <select name="year" id="yearSelector" [(ngModel)]="filters.year">
             <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
         </select>
-        <button (click)="filter()">Filter</button>
         <h3>Filter By Country:</h3>
         <select name="country" id="countrySelector" [(ngModel)]="filters.country">
             <option *ngFor="let country of countries" value="{{country}}">{{country}}</option>
         </select>
-        <button (click)="filter()">Filter</button>
         <h3>Filter By Region:</h3>
         <select name="region" id="regionSelector" [(ngModel)]="filters.region">
             <option *ngFor="let region of regions" value="{{region}}">{{region}}</option>
         </select>
-        <button (click)="filter()">Filter</button>
         <h3>Filter By Type:</h3>
         <select name="atkType" id="atkTypeSelector" [(ngModel)]="filters.atkType">
             <option *ngFor="let atkType of atkTypes" value="{{atkType}}">{{atkType}}</option>
         </select>
-        <button (click)="filter()">Filter</button>
+        <br><button (click)="filter()">Filter</button>
     </div>
     <div id="wrapper">
         <h1 id="loading" *ngIf=loading>Loading Data. Please be patient.</h1>
