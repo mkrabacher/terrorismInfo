@@ -9,8 +9,8 @@ import { HttpService } from '../http.service';
 })
 export class GraphComponent implements OnChanges, OnInit {
   switch: boolean=false;
-  deathBool: boolean=true;
   @Input() attacks;
+  @Input() loading;
 
   barChartLabels: any = [];
   barChartType: string = 'horizontalBar';
@@ -18,7 +18,6 @@ export class GraphComponent implements OnChanges, OnInit {
   killdict: any;
   dict: any;
   attackdict: any;
-  singleattackdict: any;
   barChartData: any = [ { data: [], label: '# of Deaths per Region' }, {data:[], label: "# of Wounded per Region"}];
   regionData: any = [ { data: [], label: 'Total Attacks per Region' }];
   
@@ -33,7 +32,6 @@ export class GraphComponent implements OnChanges, OnInit {
   
   constructor(private _httpService: HttpService) { }
   ngOnInit(){
-    this.deathBool = true;
   }
   ngOnChanges(){
     this.takeData();
@@ -44,25 +42,24 @@ export class GraphComponent implements OnChanges, OnInit {
     this.killdict = {};
     this.attackdict = {};
     for(var i=0; i< this.attacks.length;i++){
-      if(this.deathBool){
-        var kills = this.attacks[i].nkill;
-        var wounds = this.attacks[i].nwound;
-        if(typeof(kills)=="string"){
-          kills = parseInt(kills);
-        }else{ kills = 0 }
-        if(typeof(wounds)=="string"){
-          wounds = parseInt(wounds);
-        }else{ wounds = 0 }
-        
-        if(this.killdict[this.attacks[i].region_txt]){
-          this.killdict[this.attacks[i].region_txt][0] += kills;
-          this.killdict[this.attacks[i].region_txt][1] += wounds;
-  
-        }else{
-          this.killdict[this.attacks[i].region_txt] = [kills, wounds];
-        }
+      var kills = this.attacks[i].nkill;
+      var wounds = this.attacks[i].nwound;
+      if(typeof(kills)=="string"){
+        kills = parseInt(kills);
+      }else{ kills = 0 }
+      if(typeof(wounds)=="string"){
+        wounds = parseInt(wounds);
+      }else{ wounds = 0 }
+      
+      if(this.killdict[this.attacks[i].region_txt]){
+        this.killdict[this.attacks[i].region_txt][0] += kills;
+        this.killdict[this.attacks[i].region_txt][1] += wounds;
 
+      }else{
+        this.killdict[this.attacks[i].region_txt] = [kills, wounds];
       }
+
+
       if(this.dict[this.attacks[i].region_txt]){
         this.dict[this.attacks[i].region_txt] += 1;
       }else{
@@ -77,8 +74,6 @@ export class GraphComponent implements OnChanges, OnInit {
       }
 
     }
-    console.log("kill", this.killdict)
-    console.log("dict", this.dict)
     
     this.makeTable(this.killdict, this.dict, this.attackdict);
   }
@@ -109,21 +104,13 @@ export class GraphComponent implements OnChanges, OnInit {
       }
     }
 
-    if(Object.keys(totals).length == 1 && this.switch == false){
-      this.switch = true;
-      this.changeData();
-    }
-    if(Object.keys(totals).length != 1 && this.switch == true){
-      this.switch = false;
-      this.changeData()
-    }
     this.initializeTable();
   }
 
   initializeTable(){
+    console.log(this.barChartData[0]['data']);
     // really just making a clone so Angular can 
     // actually render the page
-    console.log("initializing table with", this.barChartData[0]['data'])
     let data = this.barChartData[0]['data'];
     let clone = JSON.parse(JSON.stringify(this.barChartData));
     clone[0].data = data;
@@ -137,7 +124,12 @@ export class GraphComponent implements OnChanges, OnInit {
     var temp_labels = this.barChartLabels;
     this.barChartLabels = this.attackChartLabels;
     this.attackChartLabels = temp_labels;
-    this.initializeTable();
+    if(this.switch == false){
+      this.switch = true;
+    }else{
+      this.switch = false;
+    }
+    this.initializeTable(); 
   }
 
 
@@ -149,18 +141,19 @@ export class GraphComponent implements OnChanges, OnInit {
     }
     if(this.barChartType == "horizontalBar"){
       this.barChartType = "pie";
-      this.barChartOptions.title.text = "Amount of deaths (outer) vs. Amount of wounded (inner)";
-      
+      if(this.switch == false){
+        this.barChartOptions.title.text = "Amount of deaths (outer) vs. Amount of wounded (inner)";  
+      }else{
+        this.barChartOptions.title.text = "Types of Attacks";
+      }
       this.barChartData[0]['backgroundColor'] = [
         // '#1f77b4', '#ff7f0e', '#2ca02c', '#b8d7b4',
         '#7f7f7f', '#ff0000', '#00ff00', '#0000ff',
         '#000000', '##2c7389', '#2c7389', '#17becf' ]
         return;
       }
+
       if(this.barChartType == "pie"){
-        this.barChartType = "doughnut";
-      }
-      if(this.barChartType == "doughnut"){
         this.barChartType = "bar";
         this.barChartOptions.title.text = "";
         return;
