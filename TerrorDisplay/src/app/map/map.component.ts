@@ -95,109 +95,6 @@ export class MapComponent implements OnInit, OnChanges {
         // this.setHeatmap(this.attacks);
     }
 
-// in progess functions
-
-    compressLargeDataSet() {
-        const HashMap = {};
-        let count = 0;
-        let kills = 0;
-        let wounds = 0;
-
-        // this badly needs a scaling toFixed number. rounding our latlng's to 0 for everything situation isn't good.
-        // build initial hashmap
-        for (let i = 0; i < this.attacks.length; i++) {
-            const key = parseFloat(this.attacks[i]['latitude']).toFixed(0) + '&' + parseFloat(this.attacks[i]['longitude']).toFixed(0);
-            if (this.attacks[i]['nkill']) {
-                // tslint:disable-next-line:radix
-                kills = parseInt(this.attacks[i]['nkill']);
-            }
-            if (this.attacks[i]['nwounds']) {
-                // tslint:disable-next-line:radix
-                wounds = parseInt(this.attacks[i]['nwounds']);
-            }
-            const weight = kills + wounds + 1;
-            if (HashMap[key]) {
-                HashMap[key] += weight;
-            } else {
-                HashMap[key] = weight;
-                count++;
-            }
-        }
-        console.log('# of points to plot:', count);
-        console.log('Hash Map:', HashMap);
-
-        for (const key in HashMap) {
-            if (HashMap.hasOwnProperty(key)) {
-                const weight = HashMap[key];
-            }
-        }
-
-        // options for results still above 1000:
-
-        // // iterate through it repeatedly always shrinking the decimal you round
-
-        // // if still greater than 1000 grab every third key and call it a day.
-
-        return HashMap;
-    }
-
-    attacksToHeatData() {
-        this.clearHeatMap();
-        if (this.attacks.length > 1000) { // --------if filter returns more than 1000 points to plot-------------------
-            const HashMap = this.compressLargeDataSet();
-            const arr = [];
-            for (const key in HashMap) {
-                if (HashMap.hasOwnProperty(key)) {
-                    const element = HashMap[key];
-                    // tslint:disable-next-line:radix
-                    const lat = parseInt(key.split('&')[0]);
-                    // tslint:disable-next-line:radix
-                    const lng = parseInt(key.split('&')[1]);
-                    arr.push({ location: new google.maps.LatLng(lat, lng), weight: HashMap[key] });
-                    // if (arr.length >= 2000) {
-                    //     break;
-                    // }
-                }
-            }
-            // this cuts the array of latlng in a third
-            if (arr.length > 1000) {
-                const thirdArr = [];
-                for (let i = 0; i < arr.length; i += 3) {
-                    thirdArr.push(arr[i]);
-                }
-                return thirdArr;
-            }
-
-            return arr;
-        } else { // --------if filter returns less than 1000 points to plot-------------------
-            const arr = [];
-            for (let i = 0; i < this.attacks.length; i++) {
-                arr.push({ location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude']) });
-            }
-            return arr;
-        }
-    }
-
-    atks2DispAsHD() {
-        if (this.attacks.length > 1000) {
-            // compress attacks via merging nearby points with hashmap => HashMap
-
-            // Turn HashMap into GMaps HM layer array => arr
-
-            // set heat map with array.
-
-            // this.setHeatmap(arr);
-
-        } else { // --------if filter returns less than 1000 points to plot-------------------
-            const arr = [];
-            for (let i = 0; i < this.attacks.length; i++) {
-                arr.push({ location: new google.maps.LatLng(this.attacks[i]['latitude'], this.attacks[i]['longitude']) });
-            }
-            return arr;
-        }
-    }
-
-// projeckt COMPRESS
     compress(data, dec) {
         const HashMap = {};
         let count = 0;
@@ -267,14 +164,12 @@ export class MapComponent implements OnInit, OnChanges {
             arr = thirdArr;
         }
 
-        console.log('Hash Map:', HashMap);
-        console.log('# of points to plot:', arr.length);
-        console.log('Plot Points:', arr);
+        // console.log('Hash Map:', HashMap);
+        // console.log('# of points to plot:', arr.length);
+        // console.log('Plot Points:', arr);
 
         return arr;
     }
-
-
 
     setHeatmap(newData) {
         this.clearHeatMap();

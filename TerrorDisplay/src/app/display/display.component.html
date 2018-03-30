@@ -3,15 +3,15 @@
     <h5 *ngIf="!loading">Showing entries {{rangeStart}} to {{rangeEnd}} of {{attacks.length}}</h5>
     <table>
         <thead>
-            <th>Region</th>
-            <th>Country</th>
-            <th>City</th>
-            <th>Year</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Summary</th>
-            <th>Attack Type</th>
-            <th>Target Type</th>
+            <th id="region-head">Region</th>
+            <th id="country-head">Country</th>
+            <th id="city-head">City</th>
+            <th id="year-head">Year</th>
+            <th id="latitude-head">Latitude</th>
+            <th id="longitude-head">Longitude</th>
+            <th id="summary-head">Summary</th>
+            <th id="atkType-head">Attack Type</th>
+            <th id="trgtType-head">Target Type</th>
         </thead>
         <tbody>
             <h3 *ngIf="loading">Loading...</h3>
@@ -22,10 +22,11 @@
                 <td>{{attack.iyear}}</td>
                 <td>{{attack.latitude}}</td>
                 <td>{{attack.longitude}}</td>
-                <td>{{attack.summary}}</td>
+                <td><a *ngIf="attack.summary" href="http://jqueryui.com/themeroller/" title="{{attack.summary}}">Summary</a></td>
                 <td>{{attack.attacktype1_txt}}</td>
                 <td>{{attack.targtype1_txt}}</td>
             </tr>
         </tbody>
+        <p><a (click)=next()>Next</a></p>
     </table>
 </div>

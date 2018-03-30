@@ -1,0 +1,35 @@
+#region-head {
+    width: 215px;
+}
+
+#country-head {
+    width: 160px;
+}
+
+#city-head {
+    width: 130px;
+}
+
+#year-head {
+    width: 40px;
+}
+
+#latitude-head {
+    width: 85px;
+}
+
+#longitude-head {
+    width: 95px;
+}
+
+#summary-head {
+    width: 75px;
+}
+
+#atkType-head {
+    width: 215px;
+}
+
+#trgtType-head {
+    width: 215px;
+}
