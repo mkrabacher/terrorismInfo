@@ -13,10 +13,10 @@ export class DisplayComponent implements OnInit, OnChanges {
     rangeStart;
     rangeEnd;
     constructor(private _httpService: HttpService) {
+        // console.log(Tablesorter);
     }
 
     ngOnChanges() {
-        console.log('shit changed yo.');
         this.loadData(this.attacks);
     }
 
@@ -28,5 +28,6 @@ export class DisplayComponent implements OnInit, OnChanges {
     loadData(data) {
         this.displayAttacks = this.attacks.slice(this.rangeStart, this.rangeEnd);
     }
+
 
 }
