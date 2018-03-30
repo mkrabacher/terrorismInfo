@@ -8,8 +8,7 @@ import { HttpService } from '../http.service';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnChanges, OnInit {
-  attackBool: boolean=true;
-  regionBool: boolean=true;
+  switch: boolean=false;
   deathBool: boolean=true;
   @Input() attacks;
 
@@ -19,7 +18,7 @@ export class GraphComponent implements OnChanges, OnInit {
   killdict: any;
   dict: any;
   attackdict: any;
-
+  singleattackdict: any;
   barChartData: any = [ { data: [], label: '# of Deaths per Region' }, {data:[], label: "# of Wounded per Region"}];
   regionData: any = [ { data: [], label: 'Total Attacks per Region' }];
   
@@ -64,28 +63,28 @@ export class GraphComponent implements OnChanges, OnInit {
         }
 
       }
-      if(this.regionBool){
-        if(this.dict[this.attacks[i].region_txt]){
-          this.dict[this.attacks[i].region_txt] += 1;
-        }else{
-          this.dict[this.attacks[i].region_txt] = 1;
-        }
+      if(this.dict[this.attacks[i].region_txt]){
+        this.dict[this.attacks[i].region_txt] += 1;
+      }else{
+        this.dict[this.attacks[i].region_txt] = 1;
       }
-      if(this.attackBool){
-        if(this.attackdict[this.attacks[i].attacktype1_txt]){
-          this.attackdict[this.attacks[i].attacktype1_txt] += 1;
-        }else{
-          this.attackdict[this.attacks[i].attacktype1_txt] = 1;
-        }
 
+
+      if(this.attackdict[this.attacks[i].attacktype1_txt]){
+        this.attackdict[this.attacks[i].attacktype1_txt] += 1;
+      }else{
+        this.attackdict[this.attacks[i].attacktype1_txt] = 1;
       }
 
     }
-    console.log(this.attackdict)
+    console.log("kill", this.killdict)
+    console.log("dict", this.dict)
+    
     this.makeTable(this.killdict, this.dict, this.attackdict);
   }
 
   makeTable(dict, totals, attackdict){
+
     this.barChartData[0]['data'] = [];
     
     if(this.barChartData[1]['data']){
@@ -93,12 +92,13 @@ export class GraphComponent implements OnChanges, OnInit {
     }
 
     for(let x in attackdict){
-      if(this.attackChartLabels.length < 7){
-        this.attackChartLabels.push(x);
-      }
-      this.attackTypeData[0]['data'].push(attackdict[x])
-    }
 
+      if(this.attackChartLabels.length < 7 && x !=undefined){
+        this.attackChartLabels.push(x);
+        this.attackTypeData[0]['data'].push(attackdict[x])
+      }
+
+    }
 
     for(let x in dict){
       this.barChartData[0]['data'].push(dict[x][0]);
@@ -108,8 +108,15 @@ export class GraphComponent implements OnChanges, OnInit {
         this.barChartLabels.push(x);
       }
     }
-    console.log("my attack data",this.attackTypeData);
-    console.log("my attack labels",this.attackChartLabels);
+
+    if(Object.keys(totals).length == 1 && this.switch == false){
+      this.switch = true;
+      this.changeData();
+    }
+    if(Object.keys(totals).length != 1 && this.switch == true){
+      this.switch = false;
+      this.changeData()
+    }
     this.initializeTable();
   }
 
@@ -130,7 +137,7 @@ export class GraphComponent implements OnChanges, OnInit {
     var temp_labels = this.barChartLabels;
     this.barChartLabels = this.attackChartLabels;
     this.attackChartLabels = temp_labels;
-    this.attackBool = true;
+    this.initializeTable();
   }
 
 
@@ -143,12 +150,9 @@ export class GraphComponent implements OnChanges, OnInit {
     if(this.barChartType == "horizontalBar"){
       this.barChartType = "pie";
       this.barChartOptions.title.text = "Amount of deaths (outer) vs. Amount of wounded (inner)";
-      if(this.attackBool){
-        this.barChartOptions.title.text = "Types of Attacks";
-      }
       
       this.barChartData[0]['backgroundColor'] = [
-        '#1f77b4', '#ff7f0e', '#2ca02c', '#b8d7b4',
+        // '#1f77b4', '#ff7f0e', '#2ca02c', '#b8d7b4',
         '#7f7f7f', '#ff0000', '#00ff00', '#0000ff',
         '#000000', '##2c7389', '#2c7389', '#17becf' ]
         return;
@@ -165,5 +169,3 @@ export class GraphComponent implements OnChanges, OnInit {
     }
 
   }
- 
-  
