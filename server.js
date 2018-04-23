@@ -60,6 +60,7 @@ app.get('/allAttacks', function (req, res) {
         if(err){
             console.log("e0rr0r",)
         }else{
+            console.log('here')
             res.json({message:'The Attacks', attacks: attacks})
         }
     })
