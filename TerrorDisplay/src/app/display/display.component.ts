@@ -29,5 +29,16 @@ export class DisplayComponent implements OnInit, OnChanges {
         this.displayAttacks = this.attacks.slice(this.rangeStart, this.rangeEnd);
     }
 
+    next() {
+        this.rangeStart += 100;
+        this.rangeEnd += 100;
+        this.loadData(this.attacks);
+    }
+
+    prev() {
+        this.rangeEnd -= 100;
+        this.rangeStart -= 100;
+        this.loadData(this.attacks);
+    }
 
 }

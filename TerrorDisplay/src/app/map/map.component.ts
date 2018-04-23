@@ -136,27 +136,50 @@ export class MapComponent implements OnInit, OnChanges {
         return arr;
     }
 
-    fullCompress(attacks) {
-        let dec = 4;
+    format(attacks) {
+        const arr = [];
+        for (let i = 0; i < attacks.length; i++) {
+            let wght = 1;
+            if (this.attacks[i]['nkill']) {
+                // tslint:disable-next-line:radix
+                wght += parseInt(this.attacks[i]['nkill']);
+            }
+            if (this.attacks[i]['nwounds']) {
+                // tslint:disable-next-line:radix
+                wght += (parseInt(this.attacks[i]['nwounds']) / 2);
+            }
+            const lat = parseFloat(this.attacks[i]['latitude']);
+            const lng = parseFloat(this.attacks[i]['longitude']);
 
+            arr.push({ location: new google.maps.LatLng(lat, lng), weight: wght });
+        }
+        return arr;
+    }
+
+    fullCompress(attacks) {
+        if (attacks.length < 1000) {
+            console.log('attacks less than 1000');
+            return this.format(attacks);
+        }
+
+        let dec = 4;
         // loop through attacks and add to HashMap with keys as lat&lng and values as weights.
         //      each lat & lng will be rounded to 4 decimals.
         let HashMap = this.compress(attacks, dec);
 
         // turn hashMap into GMaps HM layer array
         let arr = this.hash2Arr(HashMap);
-
         // check that array length is <= 1000. if not do above again but with 1 less decimal.
-        while (arr.length > 1000 && dec > 0) {
-            console.log(dec);
+        while (arr.length > 1100 && dec > 0) {
             dec--;
             HashMap = this.compress(attacks, dec);
             arr = this.hash2Arr(HashMap);
+            console.log(dec, arr.length);
         }
 
         // if decimal goes down to 0 with > 1000 points, take a third of the array.
         //      (there is only one situation where this is necessary, with all attacks.)
-        if (arr.length > 1000) {
+        if (arr.length > 1100) {
             const thirdArr = [];
             for (let i = 0; i < arr.length; i += 3) {
                 thirdArr.push(arr[i]);
